@@ -5,7 +5,6 @@ This is _VERY_ /VERY/ _VERY_ basic.
 Would LOVE any additions to code :D
 
 Written on FreeBSD but in theory should work with any other BSD or Linux distro
-Some lines of code are included, but not yet implemented (i.e. httpd.conf)
 
 cc httpd.c -o httpd
 
