@@ -21,6 +21,14 @@
 */
 
 #include "httpd.h"
+void CheckConf() {
+  FILE *config;
+  if ((config = fopen(CONFIG_PATH, "r")) == NULL) {
+    printf("Config does not exist.\n");
+  } else {
+    fprintf(stdout, "Config exists\n");
+  }
+}
 void Conf() {
   char line[256];
   int linenum=0;
@@ -43,6 +51,7 @@ void Headers() {
   HTTPD_PROTOCOL;
 }
 int main(char *argv[]) {
+  CheckConf();
   Conf();  
   register int s, c;
     int b;
@@ -95,6 +104,7 @@ int main(char *argv[]) {
             perror("httpd fdopen");
             return 5;
         }
+
 	char v[256];
 	int f;
 	if((tbserv=fopen(HTTPD_ROOT, "r")) == NULL) {
