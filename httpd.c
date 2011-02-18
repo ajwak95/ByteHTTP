@@ -1,4 +1,3 @@
-
 /*     This file is part of SlimHTTPD.
 
     SlimHTTPD is free software: you can redistribute it and/or modify
@@ -19,7 +18,7 @@
    2-16-11        |
 -------------------
 */
-
+char HttpdRoot[256];
 #include "httpd.h"
 void CheckConf() {
   FILE *config;
@@ -35,16 +34,16 @@ void Conf() {
   FILE *config;
   config = fopen(CONFIG_PATH, "r");
   while(fgets(line, 256, config) != NULL) {
-    char root[256], path[256];
+    char root[256], eq[256];
     linenum++;
     if(line[0] == '#') continue;
 
-    if(sscanf(line, "%s %s", root, path) != 2)
+    if(sscanf(line, "%s %s %s", root, eq, HttpdRoot) != 3)
       {
 	fprintf(stderr, "Syntax error, line %d\n", linenum);
 	continue;
       }
-    printf("%s = %s\n", root, path);
+    printf("%s = %s\n", root, HttpdRoot);
   }
 }
 void Headers() {
@@ -107,7 +106,7 @@ int main(char *argv[]) {
 
 	char v[256];
 	int f;
-	if((tbserv=fopen(HTTPD_ROOT, "r")) == NULL) {
+	if((tbserv=fopen(HttpdRoot, "r")) == NULL) {
 	  fprintf(client, "Cannot open file.\n");
 	}
 	// This way the loaded file can have more than 1 word..
