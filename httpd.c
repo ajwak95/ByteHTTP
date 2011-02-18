@@ -88,6 +88,7 @@ int main(char *argv[]) {
 	if((tbserv=fopen(HTTPD_ROOT, "r")) == NULL) {
 	  fprintf(client, "Cannot open file.\n");
 	}
+	// This way the loaded file can have more than 1 word..
 	while(fscanf(tbserv, "%s", v) == 1)
 	  fprintf(client, "%s\n", v);
 	
