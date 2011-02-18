@@ -7,7 +7,7 @@
 #define BACKLOG 4
 #define HTTPD_PORT 80
 #define CONFIG_PATH "httpd.conf"
-#define HTTPD_ROOT "index.html"
+#define HTTPD_ROOT "/usr/home/alex/index.html"
 #define HTTPD_PROTOCOL "HTTP/1.1"
 void Conf() {
   char line[256];
@@ -87,7 +87,6 @@ int main(char *argv[]) {
 	int f;
 	if((tbserv=fopen(HTTPD_ROOT, "r")) == NULL) {
 	  fprintf(client, "Cannot open file.\n");
-	  fclose(client);
 	}
 	fscanf(tbserv, "%s%d", v, &f);
 	fprintf(client, "%s %d", v, f);
