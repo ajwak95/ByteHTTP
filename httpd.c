@@ -6,8 +6,8 @@
 #include <netinet/in.h>
 #define BACKLOG 4
 #define HTTPD_PORT 80
-#define CONFIG_PATH "/usr/home/alex/httpd/httpd.conf"
-#define HTTPD_ROOT "/usr/home/alex/index.html"
+#define CONFIG_PATH "httpd.conf"
+#define HTTPD_ROOT "index.html"
 #define HTTPD_PROTOCOL "HTTP/1.1"
 void Conf() {
   char line[256];
