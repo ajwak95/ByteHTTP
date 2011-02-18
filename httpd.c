@@ -20,17 +20,7 @@
 -------------------
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#define BACKLOG 4
-#define HTTPD_PORT 80
-#define CONFIG_PATH "httpd.conf"
-#define HTTPD_ROOT "index.html"
-#define HTTPD_PROTOCOL "HTTP/1.1"
+#include "httpd.h"
 void Conf() {
   char line[256];
   int linenum=0;
