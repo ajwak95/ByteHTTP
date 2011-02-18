@@ -112,7 +112,7 @@ int main(char *argv[]) {
 	}
 	// This way the loaded file can have more than 1 word..
 	while(fscanf(tbserv, "%s", v) == 1)
-	  fprintf(client, "%s\n", v);
+	  fprintf(client, "%s ", v);
 	
 	fclose(tbserv);
 	fclose(client);
