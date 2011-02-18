@@ -87,6 +87,7 @@ int main(char *argv[]) {
 	int f;
 	if((tbserv=fopen(HTTPD_ROOT, "r")) == NULL) {
 	  fprintf(client, "Cannot open file.\n");
+	  fclose(client);
 	}
 	fscanf(tbserv, "%s%d", v, &f);
 	fprintf(client, "%s %d", v, f);
