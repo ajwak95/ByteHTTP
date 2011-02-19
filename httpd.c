@@ -106,14 +106,23 @@ int main(char *argv[]) {
 
 	char v[256];
 	int f;
-	if((tbserv=fopen(HttpdRoot, "r")) == NULL) {
-	  fprintf(client, "Cannot open file.\n");
+	DIR *dir;
+	struct dirent *ent;
+	if((dir=opendir(DIR_ROOT)) == NULL) {
+	  fprintf(client, "Cannot open directory.\n");
 	}
+	if((tbserv=fopen(HttpdRoot, "r")) == NULL) {
+	  while((ent = readdir(dir)) != NULL) {
+	    fprintf(client, "%s\n", ent->d_name);
+	}
+	closedir(dir);
+	} else {
 	// This way the loaded file can have more than 1 word..
 	while(fscanf(tbserv, "%s", v) == 1)
 	  fprintf(client, "%s ", v);
 	
 	fclose(tbserv);
+	}
 	fclose(client);
     }
 }
