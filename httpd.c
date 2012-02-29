@@ -1,128 +1,187 @@
-/*     This file is part of SlimHTTPD.
-
-    SlimHTTPD is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    SlimHTTPD is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with SlimHTTPD.  If not, see <http://www.gnu.org/licenses/>.
--------------------
-    httpd.c       |
-   Alex Conrey    |
-   2-16-11        |
--------------------
-*/
-char HttpdRoot[256];
+//httpd.c derived from the IBM nweb tutorial.
 #include "httpd.h"
-void CheckConf() {
-  FILE *config;
-  if ((config = fopen(CONFIG_PATH, "r")) == NULL) {
-    printf("Config does not exist.\n");
-  } else {
-    fprintf(stdout, "Config exists\n");
-  }
+
+
+struct {
+
+        char *ext;
+
+        char *filetype;
+
 }
-void Conf() {
-  char line[256];
-  int linenum=0;
-  FILE *config;
-  config = fopen(CONFIG_PATH, "r");
-  while(fgets(line, 256, config) != NULL) {
-    char root[256], eq[256];
-    linenum++;
-    if(line[0] == '#') continue;
 
-    if(sscanf(line, "%s %s %s", root, eq, HttpdRoot) != 3)
-      {
-	fprintf(stderr, "Syntax error, line %d\n", linenum);
-	continue;
-      }
-    printf("%s = %s\n", root, HttpdRoot);
-  }
-}
-void Headers() {
-  HTTPD_PROTOCOL;
-}
-int main(char *argv[]) {
-  CheckConf();
-  Conf();  
-  register int s, c;
-    int b;
-    struct sockaddr_in sa;
-    struct tm *tm;
-    FILE *client; // Client connection
-    FILE *tbserv; // (T)o (B)e (Serv)ed
-    if ((s = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
-        perror("socket");
-        return 1;
-    }
+extensions [] = {
 
-    bzero(&sa, sizeof sa);
+        {"gif", "image/gif" },
 
-    sa.sin_family = AF_INET;
-    sa.sin_port   = htons(HTTPD_PORT);
+        {"jpg", "image/jpeg"},
 
-    if (INADDR_ANY)
-        sa.sin_addr.s_addr = htonl(INADDR_ANY);
+        {"jpeg","image/jpeg"},
 
-    if (bind(s, (struct sockaddr *)&sa, sizeof sa) < 0) {
-        perror("bind");
-        return 2;
-    }
-    // Fork daemon to background
-    switch (fork()) {
-        case -1:
-            perror("fork");
-            return 3;
-            break;
-        default:
-            close(s);
-            return 0;
-            break;
-        case 0:
-            break;
-	    }
+        {"png", "image/png" },
 
-    listen(s, BACKLOG);
+        {"zip", "image/zip" },
 
-    for (;;) {
-        b = sizeof sa;
+        {"gz",  "image/gz"  },
 
-        if ((c = accept(s, (struct sockaddr *)&sa, &b)) < 0) {
-            perror("httpd");
-            return 4;
+        {"tar", "image/tar" },
+
+        {"htm", "text/html" },
+
+        {"html","text/html" },
+
+        {0,0} };
+
+
+int main(int argc, char **argv)
+
+{
+
+        int i, port, pid, listenfd, socketfd, hit;
+        size_t length;
+        char *str;
+        static struct sockaddr_in cli_addr; /* static = initialised to zeros */
+        static struct sockaddr_in serv_addr; /* static = initialised to zeros */
+
+
+
+        if( argc < 3  || argc > 3 || !strcmp(argv[1], "-?") ) {
+
+                (void)printf("hint: nweb Port-Number Top-Directory\n\n" "\tnweb is a small and very safe mini web server\n" "\tnweb only servers out file/web pages with extensions namedbelow\n"
+
+        "\t and only from the named directory or its sub-directories.\n"
+
+        "\tThere is no fancy features = safe and secure.\n\n"
+
+        "\tExample: nweb 8181 /home/nwebdir &\n\n"
+
+        "\tOnly Supports:");
+
+                for(i=0;extensions[i].ext != 0;i++)
+
+                        (void)printf(" %s",extensions[i].ext);
+
+
+
+                (void)printf("\n\tNot Supported: URLs including \"..\", Java, Javascript, CGI\n" "\tNot Supported: directories / /etc /bin /lib /tmp /usr /dev     /sbin \n""\tNo warranty given or implied\n\tNigel Griffiths nag@uk.ibm.com\n");
+
+                exit(0);
+
         }
 
-        if ((client = fdopen(c, "w")) == NULL) {
-            perror("httpd fdopen");
-            return 5;
+        if( !strncmp(argv[2],"/"   ,2 ) || !strncmp(argv[2],"/etc", 5 ) ||
+
+            !strncmp(argv[2],"/bin",5 ) || !strncmp(argv[2],"/lib", 5 ) ||
+
+            !strncmp(argv[2],"/tmp",5 ) || !strncmp(argv[2],"/usr", 5 ) ||
+
+            !strncmp(argv[2],"/dev",5 ) || !strncmp(argv[2],"/sbin",6) ){
+
+               (void)printf("ERROR: Bad top directory %s, see nweb -?\n",
+
+                  argv[2]);
+
+               exit(3);
+
         }
 
-	char v[256];
-	int f;
-	DIR *dir;
-	struct dirent *ent;
-	if((dir=opendir(DIR_ROOT)) == NULL) {
-	  fprintf(client, "Cannot open directory.\n");
-	}
-	if((tbserv=fopen(HttpdRoot, "r")) == NULL) {
-	  while((ent = readdir(dir)) != NULL) {
-	    fprintf(client, "%s\n", ent->d_name);
-	}
-	closedir(dir);
-	} else {
-	// This way the loaded file can have more than 1 word..
-	while(fscanf(tbserv, "%s", v) == 1)
-	  fprintf(client, "%s ", v);
-	
-	fclose(tbserv);
-	}
-	fclose(client);
-    }
+        if(chdir(argv[2]) == -1){
+
+             (void)printf("ERROR: Can't Change to directory %s\n",argv[2]);
+
+             exit(4);
+
+        }
+
+
+
+        /* Become deamon + unstopable and no zombies children
+
+           (= no wait()) */
+
+        if(fork() != 0)
+
+                return 0; /* parent returns OK to shell */
+
+        (void)signal(SIGCLD, SIG_IGN); /* ignore child death */
+
+        (void)signal(SIGHUP, SIG_IGN); /* ignore terminal hangups */
+
+        for(i=0;i<32;i++)
+
+                (void)close(i);      /* close open files */
+
+        (void)setpgrp();             /* break away from process group */
+
+
+
+        log(LOG,"nweb starting",argv[1],getpid());
+
+        /* setup the network socket */
+
+        if((listenfd = socket(AF_INET, SOCK_STREAM,0)) <0)
+
+                log(ERROR, "system call","socket",0);
+
+        port = atoi(argv[1]);
+
+        if(port < 0 || port >60000)
+
+                log(ERROR,"Invalid port number (try 1->60000)",argv[1],0);
+
+        serv_addr.sin_family = AF_INET;
+
+        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+        serv_addr.sin_port = htons(port);
+
+        if(bind(listenfd, (struct sockaddr *)&serv_addr,sizeof(serv_addr))
+
+           <0)
+
+                log(ERROR,"system call","bind",0);
+
+        if( listen(listenfd,64) <0)
+
+                log(ERROR,"system call","listen",0);
+
+
+
+        for(hit=1; ;hit++) {
+
+                length = sizeof(cli_addr);
+
+                if((socketfd = accept(listenfd, (struct sockaddr *)
+
+                   &cli_addr, &length)) < 0)
+
+                        log(ERROR,"system call","accept",0);
+
+
+
+                if((pid = fork()) < 0) {
+
+                        log(ERROR,"system call","fork",0);
+
+                }
+
+                else {
+
+                        if(pid == 0) {  /* child */
+
+                                (void)close(listenfd);
+
+                                web(socketfd,hit); /* never returns */
+
+                        } else {        /* parent */
+
+                                (void)close(socketfd);
+
+                        }
+
+                }
+
+        }
+
 }
+

@@ -19,18 +19,33 @@
    2-18-11        |
 -------------------
 */
-
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <dirent.h>
+#include <arpa/inet.h>
 #define BACKLOG 4
 #define HTTPD_PORT 80
 #define CONFIG_PATH "httpd.conf"
-#define DIR_ROOT "/usr/home/alex/SlimHTTPD"
+#define DIR_ROOT "/home/alex/ByteHTTPD"
 #define HTTPD_ROOT "index.html"
 #define HTTPD_PROTOCOL "HTTP/1.1"
 
+
+
+
+#define BUFSIZE 8096
+#define ERROR 42
+#define SORRY 43
+#define LOG   44
+
+
+
+void log(int type, char *s1, char *s2, int num);
+void web(int fd, int hit);
