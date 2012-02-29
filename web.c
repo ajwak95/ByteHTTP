@@ -1,4 +1,7 @@
 #include "httpd.h"
+
+/* this is a child web server process, so we can exit on errors */
+
 struct {
 
         char *ext;
@@ -28,8 +31,6 @@ extensions1 [] = {
         {"html","text/html" },
 
         {0,0} };
-/* this is a child web server process, so we can exit on errors */
-
 void web(int fd, int hit)
 
 {
@@ -136,11 +137,13 @@ void web(int fd, int hit)
 
 
 
-        if(( file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file
+        if(( file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file for reading */
+        {
+        	 //log(SORRY, "failed to open file",&buffer[5],fd);
+        	 status(404, &buffer[5], fd);
 
-           for reading */
+        }
 
-                log(SORRY, "failed to open file",&buffer[5],fd);
 
 
 
@@ -148,12 +151,12 @@ void web(int fd, int hit)
 
 
 
-        (void)sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n",
-
-            fstr);
+        if(!(file_fd = open(&buffer[5],O_RDONLY)) == -1)
+        {
+        	(void)sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
 
         (void)write(fd,buffer,strlen(buffer));
-
+        }
 
 
         /* send file in 8KB block - last block may be smaller */

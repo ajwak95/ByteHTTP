@@ -39,7 +39,6 @@
 
 
 
-
 #define BUFSIZE 8096
 #define ERROR 42
 #define SORRY 43
@@ -49,3 +48,4 @@
 
 void log(int type, char *s1, char *s2, int num);
 void web(int fd, int hit);
+void status(int type, char *s1, int num);

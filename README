@@ -1,13 +1,16 @@
 ByteHTTPD Pre-Alpha!
 
-This is _VERY_ /VERY/ _VERY_ basic. 
+All additions to the code are welcome!
+This code is based on the IBM nweb tutorial on their website. 
 
-Would LOVE any additions to code :D
+To run ByteHTTPD
+# ./bytehttpd 80 /path/to/www/folder
 
-Written on FreeBSD but in theory should work with any other BSD or Linux distro
-
-cc httpd.c -o httpd
-
+To-Do:
+	PHP Support
+	Empty Directory Listing
+	More elaborate status.c
+	
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
