@@ -30,6 +30,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <dirent.h>
+
 #define BACKLOG 4
 #define HTTPD_PORT 80
 #define CONFIG_PATH "httpd.conf"
@@ -49,3 +51,4 @@
 void log(int type, char *s1, char *s2, int num);
 void web(int fd, int hit);
 void status(int type, char *s1, int num);
+void directory(DIR *dp, int num);

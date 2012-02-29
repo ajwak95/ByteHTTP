@@ -141,6 +141,7 @@ void web(int fd, int hit)
         {
         	 //log(SORRY, "failed to open file",&buffer[5],fd);
         	 status(404, &buffer[5], fd);
+        	 directory(opendir("/home/alex/ByteHTTP"), fd);
 
         }
 
