@@ -47,13 +47,13 @@ int main(int argc, char **argv)
 
         if( argc < 3  || argc > 3 || !strcmp(argv[1], "-?") ) {
 
-                (void)printf("hint: nweb Port-Number Top-Directory\n\n" "\tnweb is a small and very safe mini web server\n" "\tnweb only servers out file/web pages with extensions namedbelow\n"
+                (void)printf("hint: ByteHTTPD Port-Number Top-Directory\n\n" "\tByteHTTPD is a small and very safe mini web server\n" "\tByteHTTPD only servers out file/web pages with extensions namedbelow\n"
 
         "\t and only from the named directory or its sub-directories.\n"
 
         "\tThere is no fancy features = safe and secure.\n\n"
 
-        "\tExample: nweb 8181 /home/nwebdir &\n\n"
+        "\tExample: bytehttpd 80 /var/www &\n\n"
 
         "\tOnly Supports:");
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 
 
 
-                (void)printf("\n\tNot Supported: URLs including \"..\", Java, Javascript, CGI\n" "\tNot Supported: directories / /etc /bin /lib /tmp /usr /dev     /sbin \n""\tNo warranty given or implied\n\tNigel Griffiths nag@uk.ibm.com\n");
+                (void)printf("\n\tNot Supported: URLs including \"..\", Java, Javascript, CGI\n" "\tNot Supported: directories / /etc /bin /lib /tmp /usr /dev     /sbin \n""\tThe end-user of this software assumes all liability. (C) 2012 Alex Conrey. Modified from the original IBM nweb script.\n");
 
                 exit(0);
 

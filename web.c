@@ -144,30 +144,28 @@ void web(int fd, int hit)
         	 directory(opendir("/home/alex/ByteHTTP"), fd);
 
         }
-
+        log(LOG,"SEND",&buffer[5],hit);
         if(!(strncmp(&buffer[buflen-len], "php", 3)==-1))
         {
-
-        		getPHP("test.php",fd);
-        		(void)write(fd,buffer,strlen(buffer));
+        		char *fp = &buffer[4]; // "/test.php"
+        		getPHP(fp, fd);
+        		//(void)write(fd,buffer,strlen(buffer));
 
         }
-       if(!(file_fd = open(&buffer[5],O_RDONLY)) == -1)
+
+        if(!(file_fd = open(&buffer[5],O_RDONLY)) == -1)
         {
         	(void)sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
 
         (void)write(fd,buffer,strlen(buffer));
         }
-
-        log(LOG,"SEND",&buffer[5],hit);
+        while ( ((ret = read(file_fd, buffer, BUFSIZE)) > 0 )) {
+                (void)write(fd,buffer,ret);
+        }
 
         /* send file in 8KB block - last block may be smaller */
 
-        while ( (ret = read(file_fd, buffer, BUFSIZE)) > 0 ) {
 
-                (void)write(fd,buffer,ret);
-
-        }
 
 #ifdef LINUX
 
