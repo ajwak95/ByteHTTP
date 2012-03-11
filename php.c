@@ -2,7 +2,7 @@
 void getPHP(char *path1, int num)
 {
 
-	FILE *fp = popen("/usr/bin/php -f test.php", "r");
+	FILE *fp = popen("/usr/bin/php -f ", "r");
 	char path[3126];
 	static char buffer[sizeof(path)];
 	while(fgets(path, sizeof(path)-1,fp) != NULL) {
