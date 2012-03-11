@@ -157,12 +157,13 @@ void web(int fd, int hit)
         {
         	(void)sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
 
-        (void)write(fd,buffer,strlen(buffer));
+        //(void)write(fd,buffer,strlen(buffer));
         }
+        if((strncmp(&buffer[buflen-len], "php", 3) == -1)){
         while ( ((ret = read(file_fd, buffer, BUFSIZE)) > 0 )) {
                 (void)write(fd,buffer,ret);
         }
-
+        }
         /* send file in 8KB block - last block may be smaller */
 
 
