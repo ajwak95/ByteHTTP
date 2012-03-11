@@ -30,6 +30,8 @@ extensions1 [] = {
 
         {"html","text/html" },
 
+        {"php", "text/php" },
+
         {0,0} };
 void web(int fd, int hit)
 
@@ -40,7 +42,7 @@ void web(int fd, int hit)
         long i, ret;
 
         char * fstr;
-
+        //buffer is the whole file path
         static char buffer[BUFSIZE+1]; /* static so zero filled */
 
 
@@ -130,35 +132,34 @@ void web(int fd, int hit)
                 }
 
         }
-
         if(fstr == 0) log(SORRY,"file extension type not supported",
 
            buffer,fd);
 
 
-
-        if(( file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file for reading */
+        if((file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file for reading */
         {
-        	 //log(SORRY, "failed to open file",&buffer[5],fd);
+        	 log(SORRY, "failed to open file",&buffer[5],fd);
         	 status(404, &buffer[5], fd);
         	 directory(opendir("/home/alex/ByteHTTP"), fd);
 
         }
 
+        if(!(strncmp(&buffer[buflen-len], "php", 3)==-1))
+        {
 
+        		getPHP("test.php",fd);
+        		(void)write(fd,buffer,strlen(buffer));
 
-
-        log(LOG,"SEND",&buffer[5],hit);
-
-
-
-        if(!(file_fd = open(&buffer[5],O_RDONLY)) == -1)
+        }
+       if(!(file_fd = open(&buffer[5],O_RDONLY)) == -1)
         {
         	(void)sprintf(buffer,"HTTP/1.0 200 OK\r\nContent-Type: %s\r\n\r\n", fstr);
 
         (void)write(fd,buffer,strlen(buffer));
         }
 
+        log(LOG,"SEND",&buffer[5],hit);
 
         /* send file in 8KB block - last block may be smaller */
 
