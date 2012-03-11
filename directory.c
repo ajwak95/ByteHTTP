@@ -1,6 +1,7 @@
 #include "httpd.h"
-void directory(DIR *dp, int num)
+void directory(char *path, int num)
 {
+	DIR *dp = opendir(path);
 	int fd;
 	static char buffer[BUFSIZE*2];
 	  struct dirent *ep;

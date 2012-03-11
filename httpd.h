@@ -32,15 +32,6 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 
-#define BACKLOG 4
-#define HTTPD_PORT 80
-#define CONFIG_PATH "httpd.conf"
-#define DIR_ROOT "/home/alex/ByteHTTPD"
-#define HTTPD_ROOT "index.html"
-#define HTTPD_PROTOCOL "HTTP/1.1"
-
-
-
 #define BUFSIZE 8096
 #define ERROR 42
 #define SORRY 43
@@ -51,5 +42,5 @@
 void log(int type, char *s1, char *s2, int num);
 void web(int fd, int hit);
 void status(int type, char *s1, int num);
-void directory(DIR *dp, int num);
+void directory(char *path, int num);
 void getPHP(char *path1, int num);

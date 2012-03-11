@@ -9,7 +9,7 @@ To run ByteHTTPD
 # ./bytehttpd 80 /path/to/www/folder
 
 To-Do:
-	PHP Support
+    Allow access to files one+ level down
 	Empty Directory Listing
 	More elaborate status.c
 	

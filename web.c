@@ -45,6 +45,7 @@ void web(int fd, int hit)
         //buffer is the whole file path
         static char buffer[BUFSIZE+1]; /* static so zero filled */
 
+        struct stat st;
 
 
         ret =read(fd,buffer,BUFSIZE);   /* read Web request in one go */
@@ -132,25 +133,26 @@ void web(int fd, int hit)
                 }
 
         }
-        if(fstr == 0) log(SORRY,"file extension type not supported",
+        if((stat((&buffer[buflen-len]), st))==0)
+        	fstr =1;
+        else
+        	log(SORRY,"file extension type not supported", buffer, fd);
+        	/*if(fstr == 0) log(SORRY,"file extension type not supported",
 
-           buffer,fd);
+           buffer,fd);*/
 
 
         if((file_fd = open(&buffer[5],O_RDONLY)) == -1) /* open the file for reading */
         {
         	 log(SORRY, "failed to open file",&buffer[5],fd);
         	 status(404, &buffer[5], fd);
-        	 directory(opendir("/home/alex/ByteHTTP"), fd);
-
+        	 directory("/home/alex/ByteHTTP", fd);
         }
         log(LOG,"SEND",&buffer[5],hit);
         if(!(strncmp(&buffer[buflen-len], "php", 3)==-1))
         {
         		char *fp = &buffer[4]; // "/test.php"
         		getPHP(fp, fd);
-        		//(void)write(fd,buffer,strlen(buffer));
-
         }
 
         if(!(file_fd = open(&buffer[5],O_RDONLY)) == -1)
